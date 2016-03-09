@@ -25,5 +25,7 @@ func UpdateStatus(v interface{}, status string) {
 
 	// allow any messages that were waiting to be sent before me
 	runtime.Gosched()
-	config.Mist.Publish([]string{"job", strings.ToLower(name)}, fmt.Sprintf(`{"model":"%s", "action":"update", "document":{"id":"%s", "status":"%s"}}`, name, id, status))
+
+	//
+	config.Mist.Publish(mist.Message{Command: "publish", Tags: []string{"job", strings.ToLower(name)}, Data: fmt.Sprintf(`{"model":"%s", "action":"update", "document":{"id":"%s", "status":"%s"}}`, name, id, status)})
 }

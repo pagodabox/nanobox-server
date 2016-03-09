@@ -33,7 +33,7 @@ var (
 
 	Log        lumber.Logger
 	Logtap     *logtap.Logtap
-	Mist       *mist.Mist
+	Mist       *mist.Proxy
 	LogHandler http.HandlerFunc
 )
 
@@ -60,12 +60,13 @@ func init() {
 
 	IP, err = externalIP()
 	if err != nil {
-		Log.Error("error: %s\n", err.Error())
+		Log.Errorf("error: %s\n", err.Error())
 	}
 
 	LogtapHost = IP
 
-	Mist = mist.New()
+	//
+	Mist = NewProxy()
 	Logtap = logtap.New(Log)
 }
 
