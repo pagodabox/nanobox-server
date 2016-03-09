@@ -28,15 +28,16 @@ func main() {
 		config.Log.Info("waiting on app mount")
 	}
 
-	// create a new mist and start listening for messages at *:1445
-	config.Mist.Listen(config.Ports["mist"], nil)
+	// start a mist tcp server listening at 0.0.0.0:1445
+	server.Start([]string{fmt.Sprintf("tcp://0.0.0.0:%s", config.Ports["mist"])}, "")
 
+	//
 	setupLogtap()
 
 	// create new router
 	err := router.StartHTTP(":" + config.Ports["router"])
 	if err != nil {
-		config.Log.Error("error: %s\n", err.Error())
+		config.Log.Errorf("error: %s\n", err.Error())
 	}
 
 	// initialize the api and set up routing
@@ -44,7 +45,7 @@ func main() {
 
 	// start nanobox
 	if err := api.Start(config.Ports["api"]); err != nil {
-		config.Log.Fatal("[nanobox/main.go] Unable to start API, aborting...\n%v\n", err)
+		config.Log.Fatalf("[nanobox/main.go] Unable to start API, aborting...\n%v\n", err)
 		os.Exit(1)
 	}
 }
